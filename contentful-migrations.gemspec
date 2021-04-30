@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'contentful-management', '~> 2.6'
-  spec.add_dependency 'http', '~> 4.1.1'
+  spec.add_dependency 'http', '> 1.0', '< 5.0'
 
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'bundler', '~> 1.16'
