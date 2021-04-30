@@ -1,3 +1,4 @@
+require 'rake'
 require 'contentful_migrations'
 namespace :contentful_migrations do
   desc 'Migrate the contentful space, runs all pending migrations'
