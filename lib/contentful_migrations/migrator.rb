@@ -36,7 +36,10 @@ module ContentfulMigrations
       @logger = logger
       @space_id = space_id
       @migration_content_type_name = migration_content_type_name
-      @client = Contentful::Management::Client.new(access_token)
+      # Our Contentful space has default (and only) locale of en-GB
+      # we need to set the default client locale explicitly otherwise stuff doesn't work...
+      # See https://github.com/contentful/contentful-management.rb/issues/73 and 201 - 204
+      @client = Contentful::Management::Client.new(access_token, default_locale: 'en-GB')
       @env_id = env_id || ENV['CONTENTFUL_ENV'] || 'master'
       @space = @client.environments(space_id).find(@env_id)
       @page_size = 1000
