@@ -25,7 +25,11 @@ module ContentfulMigrations
     end
 
     def record_migration(migration_content_type)
-      entry = migration_content_type.entries.create(version: version)
+      entry = migration_content_type.entries.new
+      # Our Contentful space has default (and only) locale of en-GB
+      # we need to set the locale explicitly to store the version
+      entry.locale = 'en-GB'
+      entry.version = version
       entry.save
       entry.publish
       entry
