@@ -139,7 +139,7 @@ module ContentfulMigrations
       ).resolve
     end
 
-    MIGRATION_FILENAME_REGEX = /\A([0-9]+)_([_a-z0-9]*)\.?([_a-z0-9]*)?\.rb\z/
+    MIGRATION_FILENAME_REGEX = /\A([0-9]+)_([_a-z0-9]*)\.?([_a-z0-9]*)?\.rb\z/.freeze
 
     def parse_migration_filename(filename)
       File.basename(filename).scan(MIGRATION_FILENAME_REGEX).first
