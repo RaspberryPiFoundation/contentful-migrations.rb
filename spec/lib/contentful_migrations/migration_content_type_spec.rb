@@ -13,7 +13,7 @@ RSpec.describe ContentfulMigrations::MigrationContentType do
 
   describe '#initialize' do
     it 'sets name and version' do
-      migrator = described_class.new(defaults)
+      migrator = described_class.new(**defaults)
 
       expect(migrator.client).to eq(client)
       expect(migrator.space).to eq(space)
@@ -22,7 +22,7 @@ RSpec.describe ContentfulMigrations::MigrationContentType do
   end
 
   describe '#resolve' do
-    subject { described_class.new(defaults) }
+    subject { described_class.new(**defaults) }
 
     let(:content_types) { double(:content_types) }
     let(:migration_content_type) { double(:migration_content_type) }

@@ -11,15 +11,15 @@ module ContentfulMigrations
     DEFAULT_MIGRATION_PATH = 'db/contentful_migrations'.freeze
 
     def self.migrate(args = {})
-      new(parse_options(args)).migrate
+      new(**parse_options(args)).migrate
     end
 
     def self.rollback(args = {})
-      new(parse_options(args)).rollback
+      new(**parse_options(args)).rollback
     end
 
     def self.pending(args = {})
-      new(parse_options(args)).pending
+      new(**parse_options(args)).pending
     end
 
     attr_reader :migrations_path, :access_token, :space_id, :client, :space, :env_id,

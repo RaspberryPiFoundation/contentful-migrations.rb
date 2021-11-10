@@ -55,7 +55,7 @@ RSpec.describe ContentfulMigrations::Migrator do
 
   describe '#initialize' do
     it 'sets name and version' do
-      migrator = described_class.new(defaults)
+      migrator = described_class.new(**defaults)
 
       expect(migrator.migrations_path).to eq('spec/db/contentful_migrations')
       expect(migrator.access_token).to eq('access_token')
@@ -65,12 +65,12 @@ RSpec.describe ContentfulMigrations::Migrator do
     end
     it 'raises error when invalid path' do
       expect do
-        described_class.new(defaults.merge(migrations_path: 'bad/path'))
+        described_class.new(**defaults.merge(migrations_path: 'bad/path'))
       end.to raise_error(ContentfulMigrations::Migrator::InvalidMigrationPath)
     end
   end
   describe '#migrate' do
-    subject { described_class.new(defaults) }
+    subject { described_class.new(**defaults) }
     context 'when no migrations' do
       before do
         allow(subject).to receive(:migrations).and_return([])
