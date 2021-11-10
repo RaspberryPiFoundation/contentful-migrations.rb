@@ -3,15 +3,9 @@ AllCops:
   TargetRubyVersion: "2.7"
   NewCops: enable
   Exclude:
-    - "Gemfile"
-    - "Guardfile"
     - "bin/**/*"
-    - "db/**/*"
-    - "node_modules/**/*"
-    - "public/**/*"
-    - "test/**/*"
-    - "tmp/**/*"
     - "vendor/**/*"
+    - "spec/db/contentful_migrations/*.rb"
 
 Style/Documentation:
   Enabled: false
@@ -19,6 +13,5 @@ Style/Documentation:
 Metrics/BlockLength:
   Exclude:
     - '*.gemspec'
-    - config/routes.rb
-    - spec/**/*_spec.rb
+    - "spec/**/*_spec.rb"
 
