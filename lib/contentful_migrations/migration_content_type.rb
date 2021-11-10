@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module ContentfulMigrations
   class MigrationContentType
-    DEFAULT_MIGRATION_CONTENT_TYPE = 'migrations'.freeze
+    DEFAULT_MIGRATION_CONTENT_TYPE = 'migrations'
 
     attr_reader :access_token, :space_id, :client, :space,
                 :migration_content_type_name, :logger
@@ -19,7 +21,7 @@ module ContentfulMigrations
       @migration_content_type ||= find_or_create_migration_content_type
     end
 
-  private
+    private
 
     def find_or_create_migration_content_type
       content_type = space.content_types.find(migration_content_type_name)

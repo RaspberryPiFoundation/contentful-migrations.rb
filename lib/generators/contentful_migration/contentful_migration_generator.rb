@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails/generators'
 
 class ContentfulMigrationGenerator < Rails::Generators::NamedBase
@@ -22,7 +24,7 @@ class ContentfulMigrationGenerator < Rails::Generators::NamedBase
         end
 
       end
-   FILE
+    FILE
   end
 
   def next_migration_number

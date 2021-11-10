@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'contentful_migrations'
 namespace :contentful_migrations do
   desc 'Migrate the contentful space, runs all pending migrations'
@@ -11,7 +13,7 @@ namespace :contentful_migrations do
   end
 
   desc 'List any pending contentful migrations'
-  task pending: :environment  do |_t, _args|
+  task pending: :environment do |_t, _args|
     ContentfulMigrations::Migrator.pending
   end
 end

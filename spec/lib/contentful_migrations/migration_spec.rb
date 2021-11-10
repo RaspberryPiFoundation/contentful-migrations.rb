@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require 'contentful_migrations/migration'
+
 RSpec.describe ContentfulMigrations::Migration do
   let(:version) { '20180216021826' }
   let(:name) { 'BuildTestContent' }

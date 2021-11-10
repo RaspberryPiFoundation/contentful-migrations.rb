@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require 'contentful_migrations/migrator'
+
 RSpec.describe ContentfulMigrations::Migrator do
   ########
   ## Class methods
@@ -69,6 +73,7 @@ RSpec.describe ContentfulMigrations::Migrator do
       end.to raise_error(ContentfulMigrations::Migrator::InvalidMigrationPath)
     end
   end
+
   describe '#migrate' do
     subject { described_class.new(**defaults) }
     context 'when no migrations' do

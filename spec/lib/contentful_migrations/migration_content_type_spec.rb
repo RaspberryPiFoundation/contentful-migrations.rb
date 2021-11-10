@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require 'contentful_migrations/migration_content_type'
+
 RSpec.describe ContentfulMigrations::MigrationContentType do
   let(:client) { double(:client) }
   let(:space) { double(:space) }

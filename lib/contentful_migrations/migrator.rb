@@ -1,14 +1,19 @@
+# frozen_string_literal: true
+
+require 'contentful/management/client'
+require 'contentful_migrations/string_refinements'
+
 module ContentfulMigrations
   class Migrator
-    include Utils
+    using StringRefinements
 
-    class InvalidMigrationPath < StandardError #:nodoc:
+    class InvalidMigrationPath < StandardError # :nodoc:
       def initialize(migrations_path)
         super("#{migrations_path} is not a valid directory.")
       end
     end
 
-    DEFAULT_MIGRATION_PATH = 'db/contentful_migrations'.freeze
+    DEFAULT_MIGRATION_PATH = 'db/contentful_migrations'
 
     def self.migrate(args = {})
       new(**parse_options(args)).migrate
@@ -45,9 +50,7 @@ module ContentfulMigrations
 
     def migrate
       runnable = migrations(migrations_path).reject { |m| ran?(m) }
-      if runnable.empty?
-        logger.info('No migrations to run, everything up to date!')
-      end
+      logger.info('No migrations to run, everything up to date!') if runnable.empty?
 
       runnable.each do |migration|
         logger.info("running migration #{migration.version} #{migration.name} ")
@@ -73,7 +76,7 @@ module ContentfulMigrations
       end
     end
 
-  private
+    private
 
     def self.parse_options(args)
       {
@@ -81,7 +84,7 @@ module ContentfulMigrations
         access_token: ENV['CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'],
         space_id: ENV['CONTENTFUL_SPACE_ID'],
         migration_content_type_name: MigrationContentType::DEFAULT_MIGRATION_CONTENT_TYPE,
-        logger: Logger.new(STDOUT)
+        logger: Logger.new($stdout)
       }.merge(args)
     end
 
@@ -120,7 +123,7 @@ module ContentfulMigrations
       paths = Array(paths)
       migrations = migration_files(paths).map do |file|
         version, name, scope = parse_migration_filename(file)
-        ContentfulMigrations::MigrationProxy.new(camelize(name), version.to_i, file, scope)
+        ContentfulMigrations::MigrationProxy.new(name.camelize, version.to_i, file, scope)
       end
 
       migrations.sort_by(&:version)
