@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    contentful-migrations (0.1.4)
+    contentful-migrations (0.2.0)
       contentful-management (~> 3.0)
 
 GEM
