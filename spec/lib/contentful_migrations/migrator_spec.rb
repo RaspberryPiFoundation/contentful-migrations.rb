@@ -98,14 +98,14 @@ RSpec.describe ContentfulMigrations::Migrator do
       let(:migration) { double(:migration, version: 20_180_216_021_826, name: 'BuildTestContent') }
 
       before do
-        expect(Contentful::Management::Client).to receive(:new).and_return(client)
-        expect(client).to receive(:environments).with('space_id').and_return(space)
-        expect(space).to receive(:find).with('master').and_return(space)
         allow(subject).to receive(:migration_content_type).and_return(migration_content_type)
         allow(logger).to receive(:info)
       end
 
       it 'sets name and version' do
+        expect(Contentful::Management::Client).to receive(:new).and_return(client)
+        expect(client).to receive(:environments).with('space_id').and_return(space)
+        expect(space).to receive(:find).with('master').and_return(space)
         expect(migration_content_type).to receive(:entries).and_return(entries)
         expect(ContentfulMigrations::MigrationProxy).to receive(:new).with(
           'BuildTestContent',

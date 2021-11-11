@@ -14,6 +14,13 @@ module ContentfulMigrations
     end
 
     DEFAULT_MIGRATION_PATH = 'db/contentful_migrations'
+    DEFAULT_MIGRATOR_OPTIONS = {
+      migrations_path: ENV.fetch('MIGRATION_PATH', DEFAULT_MIGRATION_PATH),
+      access_token: ENV['CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'],
+      space_id: ENV['CONTENTFUL_SPACE_ID'],
+      migration_content_type_name: MigrationContentType::DEFAULT_MIGRATION_CONTENT_TYPE,
+      logger: Logger.new($stdout)
+    }.freeze
 
     def self.migrate(args = {})
       new(**parse_options(args)).migrate
@@ -27,7 +34,11 @@ module ContentfulMigrations
       new(**parse_options(args)).pending
     end
 
-    attr_reader :migrations_path, :access_token, :space_id, :client, :space, :env_id,
+    def self.parse_options(args)
+      DEFAULT_MIGRATOR_OPTIONS.merge(args)
+    end
+
+    attr_reader :migrations_path, :access_token, :space_id, :env_id,
                 :migration_content_type_name, :logger, :page_size
 
     def initialize(migrations_path:,
@@ -41,11 +52,17 @@ module ContentfulMigrations
       @logger = logger
       @space_id = space_id
       @migration_content_type_name = migration_content_type_name
-      @client = Contentful::Management::Client.new(access_token)
       @env_id = env_id || ENV['CONTENTFUL_ENV'] || 'master'
-      @space = @client.environments(space_id).find(@env_id)
       @page_size = 1000
       validate_options
+    end
+
+    def client
+      @client ||= Contentful::Management::Client.new(access_token, raise_errors: true)
+    end
+
+    def space
+      @space ||= client.environments(space_id).find(env_id)
     end
 
     def migrate
@@ -77,16 +94,6 @@ module ContentfulMigrations
     end
 
     private
-
-    def self.parse_options(args)
-      {
-        migrations_path: ENV.fetch('MIGRATION_PATH', DEFAULT_MIGRATION_PATH),
-        access_token: ENV['CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'],
-        space_id: ENV['CONTENTFUL_SPACE_ID'],
-        migration_content_type_name: MigrationContentType::DEFAULT_MIGRATION_CONTENT_TYPE,
-        logger: Logger.new($stdout)
-      }.merge(args)
-    end
 
     def validate_options
       raise InvalidMigrationPath, migrations_path unless File.directory?(migrations_path)
