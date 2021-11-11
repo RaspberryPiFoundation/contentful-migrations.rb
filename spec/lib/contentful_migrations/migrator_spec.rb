@@ -1,11 +1,27 @@
 # frozen_string_literal: true
 
+require 'climate_control'
 require 'contentful_migrations/migrator'
 
 RSpec.describe ContentfulMigrations::Migrator do
   ########
   ## Class methods
   ########
+
+  let(:env) do
+    {
+      CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: management_access_token,
+      CONTENTFUL_SPACE_ID: space_id
+    }
+  end
+  let(:management_access_token) { 'management_access_token' }
+  let(:space_id) { 'space_id' }
+
+  around do |example|
+    ClimateControl.modify(env) do
+      example.run
+    end
+  end
 
   describe '.migrate' do
     let(:migrated) { double(:migrated) }

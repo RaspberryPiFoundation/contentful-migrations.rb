@@ -14,13 +14,6 @@ module ContentfulMigrations
     end
 
     DEFAULT_MIGRATION_PATH = 'db/contentful_migrations'
-    DEFAULT_MIGRATOR_OPTIONS = {
-      migrations_path: ENV.fetch('MIGRATION_PATH', DEFAULT_MIGRATION_PATH),
-      access_token: ENV['CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'],
-      space_id: ENV['CONTENTFUL_SPACE_ID'],
-      migration_content_type_name: MigrationContentType::DEFAULT_MIGRATION_CONTENT_TYPE,
-      logger: Logger.new($stdout)
-    }.freeze
 
     def self.migrate(args = {})
       new(**parse_options(args)).migrate
@@ -35,7 +28,13 @@ module ContentfulMigrations
     end
 
     def self.parse_options(args)
-      DEFAULT_MIGRATOR_OPTIONS.merge(args)
+      {
+        migrations_path: ENV.fetch('MIGRATION_PATH', DEFAULT_MIGRATION_PATH),
+        access_token: ENV.fetch('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'),
+        space_id: ENV.fetch('CONTENTFUL_SPACE_ID'),
+        migration_content_type_name: MigrationContentType::DEFAULT_MIGRATION_CONTENT_TYPE,
+        logger: Logger.new($stdout)
+      }.merge(args)
     end
 
     attr_reader :migrations_path, :access_token, :space_id, :env_id,
