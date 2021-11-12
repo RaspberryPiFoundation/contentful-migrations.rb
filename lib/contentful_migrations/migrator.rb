@@ -32,7 +32,7 @@ module ContentfulMigrations
         migrations_path: ENV.fetch('MIGRATION_PATH', DEFAULT_MIGRATION_PATH),
         access_token: ENV.fetch('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'),
         space_id: ENV.fetch('CONTENTFUL_SPACE_ID'),
-        migration_content_type_name: MigrationContentType::DEFAULT_MIGRATION_CONTENT_TYPE,
+        migration_content_type_name: ENV.fetch('CONTENTFUL_MIGRATION_CONTENT_TYPE', nil),
         logger: Logger.new($stdout)
       }.merge(args)
     end
@@ -141,8 +141,8 @@ module ContentfulMigrations
 
     def migration_content_type
       @migration_content_type ||= MigrationContentType.new(
-        space: space, client: client, logger: logger
-      ).resolve
+        space: space, content_type_name: migration_content_type_name
+      ).content_type
     end
 
     MIGRATION_FILENAME_REGEX = /\A([0-9]+)_([_a-z0-9]*)\.?([_a-z0-9]*)?\.rb\z/.freeze
