@@ -14,6 +14,7 @@ module ContentfulMigrations
     end
 
     DEFAULT_MIGRATION_PATH = 'db/contentful_migrations'
+    DEFAULT_MIGRATION_CONTENT_TYPE_NAME = 'migrations'
 
     def self.migrate(args = {})
       new(**parse_options(args)).migrate
@@ -32,7 +33,7 @@ module ContentfulMigrations
         migrations_path: ENV.fetch('MIGRATION_PATH', DEFAULT_MIGRATION_PATH),
         access_token: ENV.fetch('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'),
         space_id: ENV.fetch('CONTENTFUL_SPACE_ID'),
-        migration_content_type_name: ENV.fetch('CONTENTFUL_MIGRATION_CONTENT_TYPE', nil),
+        migration_content_type_name: ENV.fetch('CONTENTFUL_MIGRATION_CONTENT_TYPE', DEFAULT_MIGRATION_CONTENT_TYPE_NAME),
         logger: Logger.new($stdout)
       }.merge(args)
     end
@@ -60,8 +61,8 @@ module ContentfulMigrations
       @client ||= Contentful::Management::Client.new(access_token, raise_errors: true)
     end
 
-    def space
-      @space ||= client.environments(space_id).find(env_id)
+    def environment
+      @environment ||= client.environments(space_id).find(env_id)
     end
 
     def migrate
@@ -70,7 +71,7 @@ module ContentfulMigrations
 
       runnable.each do |migration|
         logger.info("running migration #{migration.version} #{migration.name} ")
-        migration.migrate(:up, client, space)
+        migration.migrate(:up, client, environment)
         migration.record_migration(migration_content_type)
       end
       self
@@ -80,7 +81,7 @@ module ContentfulMigrations
       already_migrated = migrations(migrations_path).select { |m| ran?(m) }
       migration = already_migrated.pop
       logger.info("Rolling back migration #{migration.version} #{migration.name} ")
-      migration.migrate(:down, client, space)
+      migration.migrate(:down, client, environment)
       migration.erase_migration(migration_content_type)
     end
 
@@ -141,7 +142,7 @@ module ContentfulMigrations
 
     def migration_content_type
       @migration_content_type ||= MigrationContentType.new(
-        space: space, content_type_name: migration_content_type_name
+        environment: environment, content_type_name: migration_content_type_name
       ).content_type
     end
 

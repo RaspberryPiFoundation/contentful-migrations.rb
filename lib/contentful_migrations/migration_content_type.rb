@@ -4,14 +4,10 @@ require 'contentful/management'
 
 module ContentfulMigrations
   class MigrationContentType
-    DEFAULT_CONTENT_TYPE_NAME = 'migrations'
+    attr_reader :environment, :content_type_name
 
-    attr_reader :space, :content_type_name
-
-    def initialize(space:,
-                   content_type_name: DEFAULT_CONTENT_TYPE_NAME)
-
-      @space = space
+    def initialize(environment:, content_type_name:)
+      @environment = environment
       @content_type_name = content_type_name
     end
 
@@ -22,7 +18,7 @@ module ContentfulMigrations
     private
 
     def content_types
-      @content_types ||= space.content_types
+      @content_types ||= environment.content_types
     end
 
     def find_or_create_content_type

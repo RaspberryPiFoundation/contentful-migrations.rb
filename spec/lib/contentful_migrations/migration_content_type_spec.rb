@@ -6,9 +6,9 @@ require 'contentful_migrations/migration_content_type'
 RSpec.describe ContentfulMigrations::MigrationContentType do
   subject { described_class.new(**defaults) }
 
-  let(:space) { double(Contentful::Management::Space) }
+  let(:environment) { instance_double(Contentful::Management::Environment) }
   let(:content_type_name) { 'foos' }
-  let(:defaults) { { space: space, content_type_name: content_type_name } }
+  let(:defaults) { { environment: environment, content_type_name: content_type_name } }
 
   describe '#content_type' do
     subject { described_class.new(**defaults).content_type }
@@ -17,7 +17,7 @@ RSpec.describe ContentfulMigrations::MigrationContentType do
     let(:content_type) { instance_double(Contentful::Management::ContentType) }
 
     before do
-      expect(space).to receive(:content_types).and_return(content_types)
+      expect(environment).to receive(:content_types).and_return(content_types)
     end
 
     context 'when content type exists' do
