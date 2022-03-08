@@ -110,6 +110,12 @@ RSpec.describe ContentfulMigrations::Migrator do
         let(:client) { double(:client) }
         let(:spaces) { double(:spaces) }
         let(:space) { double(:space) }
+        let(:locales) { double(:locales) }
+        let(:all_locales) { [default_locale] }
+        let(:default_locale) { Struct.new(:code, :default).new('en', true) }
+        let(:space_client) { double(:space_client) }
+        let(:space_client_config) { {} }
+
         let(:content_types) { double(:content_types) }
         let(:migration_content_type) { double(:migration_content_type) }
         let(:entries) { double(:entries, all: all) }
@@ -125,6 +131,11 @@ RSpec.describe ContentfulMigrations::Migrator do
           expect(Contentful::Management::Client).to receive(:new).and_return(client)
           expect(client).to receive(:environments).with(space_id).and_return(space)
           expect(space).to receive(:find).with(env_id).and_return(space)
+          expect(space).to receive(:locales).and_return(locales)
+          expect(locales).to receive(:all).and_return(all_locales)
+          expect(space).to receive(:client).and_return(space_client)
+          expect(space_client).to receive(:configuration).and_return(space_client_config)
+
           expect(migration_content_type).to receive(:entries).and_return(entries)
           expect(ContentfulMigrations::MigrationProxy).to receive(:new).with(
             'BuildTestContent',
@@ -135,6 +146,7 @@ RSpec.describe ContentfulMigrations::Migrator do
           expect(migration).to receive(:migrate).with(:up, client, space)
           expect(migration).to receive(:record_migration).with(migration_content_type)
           expect(migrator.migrate).to eq(migrator)
+          expect(space_client_config[:default_locale]).to eq default_locale.code
         end
 
         it 'sets @page_size during construction' do
