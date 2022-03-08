@@ -68,7 +68,7 @@ module ContentfulMigrations
 
       # Set the default locale on the environment's client (ugh)
       default_locale = env.locales.all.find(&:default)
-      env.client.configuration[:default_locale] = default_locale
+      env.client.configuration[:default_locale] = default_locale.code
 
       @environment = env
     end
