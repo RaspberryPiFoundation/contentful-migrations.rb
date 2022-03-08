@@ -80,7 +80,6 @@ RSpec.describe ContentfulMigrations::Migrator do
 
     describe '#initialize' do
       it 'sets name and version' do
-
         expect(migrator.migrations_path).to eq migrations_path
         expect(migrator.access_token).to eq access_token
         expect(migrator.space_id).to eq space_id
