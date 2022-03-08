@@ -148,7 +148,7 @@ module ContentfulMigrations
       ).content_type
 
       # Set the default locale on the content type client (ugh)
-      content_type.client.default_locale = default_locale
+      content_type.client.configuration[:default_locale] = default_locale
 
       @migration_content_type = content_type
     end
