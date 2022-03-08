@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 
-lib = File.expand_path('../lib', __FILE__)
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'contentful_migrations/version'
 
@@ -12,29 +13,33 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Contentful Migrations in Ruby'
   spec.description   = 'Migration library system for Contentful API dependent on
                           contentful-management gem and plagarized from activerecord.'
-  spec.homepage      = "https://github.com/monkseal/contentful-migrations.rb"
+  spec.homepage      = 'https://github.com/monkseal/contentful-migrations.rb'
   spec.license       = 'MIT'
+
+  spec.required_ruby_version = '>= 2.7.0'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "https://rubygems.org"
+    spec.metadata['allowed_push_host'] = 'https://rubygems.org'
   else
     raise 'RubyGems 2.0 or newer is required to protect against ' \
-      'public gem pushes.'
+          'public gem pushes.'
   end
 
-  spec.files = Dir["{lib,vendor}/**/*"]
-  spec.bindir        = 'exe'
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.files         = Dir['lib/**/*']
+  spec.bindir        = 'bin'
+  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
+  spec.add_dependency 'contentful-management', '~> 3.0'
 
-  spec.add_dependency 'contentful-management', '~> 2.6'
-  spec.add_dependency 'http', '~> 4.1.1'
-
+  spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'byebug'
+  spec.add_development_dependency 'climate_control'
   spec.add_development_dependency 'pry'
-  spec.add_development_dependency 'bundler', '~> 1.16'
-  spec.add_development_dependency 'rake', '~> 12.3.0'
-  spec.add_development_dependency 'rspec', '~> 3.6'
-  spec.add_development_dependency 'byebug', '~> 10.0.0'
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'rspec_junit_formatter'
+  spec.add_development_dependency 'rubocop-rspec'
+  spec.add_development_dependency 'simplecov'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end

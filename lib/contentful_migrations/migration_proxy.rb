@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 require 'forwardable'
-require 'contentful_migrations/utils'
+require 'contentful_migrations/string_refinements'
 
 module ContentfulMigrations
   # MigrationProxy is used to defer loading of the actual migration classes
@@ -8,7 +10,7 @@ module ContentfulMigrations
 
   MigrationProxy = Struct.new(:name, :version, :filename, :scope) do
     extend Forwardable
-    include Utils
+    using StringRefinements
 
     def initialize(name, version, filename, scope)
       super
@@ -29,7 +31,7 @@ module ContentfulMigrations
 
     def load_migration
       require(File.expand_path(filename))
-      constantize(name).new(name, version)
-     end
+      name.constantize.new(name, version)
+    end
   end
 end

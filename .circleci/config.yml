@@ -1,0 +1,56 @@
+---
+version: 2.1
+
+jobs:
+  rubocop:
+    docker:
+      - image: 'cimg/base:2021.10'
+    parameters:
+      ruby-version:
+        type: string
+    steps:
+      - checkout
+      - ruby/install:
+          version:  << parameters.ruby-version >>
+      - ruby/install-deps
+      - ruby/rubocop-check:
+          format: progress
+          label: Inspecting with Rubocop
+
+  test:
+    docker:
+      - image: 'cimg/base:2021.10'
+    parameters:
+      ruby-version:
+        type: string
+    steps:
+      - checkout
+      - ruby/install:
+          version:  << parameters.ruby-version >>
+      - ruby/install-deps
+      - ruby/rspec-test
+      - store_artifacts:
+          path: coverage
+
+orbs:
+  ruby: circleci/ruby@1
+
+workflows:
+  code_quality:
+    jobs:
+      - rubocop:
+          matrix:
+            parameters:
+              ruby-version: ["2.7", "3.0"]
+          filters:
+            branches:
+              ignore:
+                - master
+                - main
+  test:
+    jobs:
+      - test:
+          matrix:
+            parameters:
+              ruby-version: ["2.7", "3.0"]
+

@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require 'contentful_migrations/migration_proxy'
+
 RSpec.describe ContentfulMigrations::MigrationProxy do
   let(:version) { '20180216021826' }
   let(:filename) { 'spec/db/contentful_migrations/20180216021826_build_test_content.rb' }

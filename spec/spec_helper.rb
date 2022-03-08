@@ -1,6 +1,11 @@
-require 'bundler/setup'
-require 'contentful_migrations'
-require 'pry'
+# frozen_string_literal: true
+
+require 'simplecov'
+
+SimpleCov.start do
+  enable_coverage :branch
+  add_filter %r{^/spec/}
+end
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

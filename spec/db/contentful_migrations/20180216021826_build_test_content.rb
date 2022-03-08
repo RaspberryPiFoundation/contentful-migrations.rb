@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BuildTestContent < ContentfulMigrations::Migration
   def up
     with_space do |space|

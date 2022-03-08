@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ContentfulMigrations
   class Migration
     attr_reader :name, :version, :contentful_client, :contentful_space
@@ -34,6 +36,7 @@ module ContentfulMigrations
     def erase_migration(migration_content_type)
       entry = migration_content_type.entries.all.find { |m| m.version.to_i == version.to_i }
       return unless entry
+
       entry.unpublish
       entry.destroy
       entry
