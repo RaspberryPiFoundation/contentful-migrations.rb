@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    contentful-migrations (0.2.0)
+    contentful-migrations (0.2.1)
       contentful-management (~> 3.0)
 
 GEM
@@ -21,7 +21,7 @@ GEM
     docile (1.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    ffi (1.15.4)
+    ffi (1.15.5)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake

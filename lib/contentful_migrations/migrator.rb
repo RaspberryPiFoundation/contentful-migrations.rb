@@ -4,7 +4,7 @@ require 'contentful/management/client'
 require 'contentful_migrations/string_refinements'
 
 module ContentfulMigrations
-  class Migrator
+  class Migrator # rubocop:disable Metrics/ClassLength
     using StringRefinements
 
     class InvalidMigrationPath < StandardError # :nodoc:
@@ -33,7 +33,8 @@ module ContentfulMigrations
         migrations_path: ENV.fetch('MIGRATION_PATH', DEFAULT_MIGRATION_PATH),
         access_token: ENV.fetch('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'),
         space_id: ENV.fetch('CONTENTFUL_SPACE_ID'),
-        migration_content_type_name: ENV.fetch('CONTENTFUL_MIGRATION_CONTENT_TYPE', DEFAULT_MIGRATION_CONTENT_TYPE_NAME),
+        migration_content_type_name: ENV.fetch('CONTENTFUL_MIGRATION_CONTENT_TYPE',
+                                               DEFAULT_MIGRATION_CONTENT_TYPE_NAME),
         logger: Logger.new($stdout)
       }.merge(args)
     end
@@ -62,7 +63,15 @@ module ContentfulMigrations
     end
 
     def environment
-      @environment ||= client.environments(space_id).find(env_id)
+      return @environment if @environment.is_a?(Contentful::Management::Environment)
+
+      env = client.environments(space_id).find(env_id)
+
+      # Set the default locale on the environment's client (ugh)
+      default_locale = env.locales.all.find(&:default)
+      env.client.configuration[:default_locale] = default_locale.code
+
+      @environment = env
     end
 
     def migrate
