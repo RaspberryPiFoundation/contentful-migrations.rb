@@ -62,7 +62,15 @@ module ContentfulMigrations
     end
 
     def environment
-      @environment ||= client.environments(space_id).find(env_id)
+      return @environment if @environment.is_a?(Contentful::Management::Environment)
+
+      env = client.environments(space_id).find(env_id)
+
+      # Set the default locale on the environment's client (ugh)
+      default_locale = env.locales.all.find(&:default)
+      env.client.configuration[:default_locale] = default_locale
+
+      @environment = env
     end
 
     def migrate
@@ -141,24 +149,9 @@ module ContentfulMigrations
     end
 
     def migration_content_type
-      return @migration_content_type if @migration_content_type.is_a?(MigrationContentType)
-
-      content_type ||= MigrationContentType.new(
+      @migration_content_type ||= MigrationContentType.new(
         environment: environment, content_type_name: migration_content_type_name
       ).content_type
-
-      # Set the default locale on the content type client (ugh)
-      content_type.client.configuration[:default_locale] = default_locale
-
-      @migration_content_type = content_type
-    end
-
-    def available_locales
-      @available_locales ||= environment.locales.all
-    end
-
-    def default_locale
-      @default_locale ||= available_locales.find(&:default)
     end
 
     MIGRATION_FILENAME_REGEX = /\A([0-9]+)_([_a-z0-9]*)\.?([_a-z0-9]*)?\.rb\z/.freeze
