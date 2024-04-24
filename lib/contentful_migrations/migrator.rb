@@ -31,8 +31,8 @@ module ContentfulMigrations
     def self.parse_options(args)
       {
         migrations_path: ENV.fetch('MIGRATION_PATH', DEFAULT_MIGRATION_PATH),
-        access_token: ENV.fetch('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN'),
-        space_id: ENV.fetch('CONTENTFUL_SPACE_ID'),
+        access_token: ENV.fetch('CONTENTFUL_MANAGEMENT_ACCESS_TOKEN', nil),
+        space_id: ENV.fetch('CONTENTFUL_SPACE_ID', nil),
         migration_content_type_name: ENV.fetch('CONTENTFUL_MIGRATION_CONTENT_TYPE',
                                                DEFAULT_MIGRATION_CONTENT_TYPE_NAME),
         logger: Logger.new($stdout)
